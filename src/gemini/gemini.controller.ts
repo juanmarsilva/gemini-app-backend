@@ -61,7 +61,17 @@ export class GeminiController {
 
     const data = await this.outputStreamResponse(res, stream);
 
-    console.log({ data });
-  }
-  
+    const geminiMessages = {
+      role: 'model',
+      parts: [{ text: data }]
+    };
+
+    const userMessage = {
+      role: 'user',
+      parts: [{ text: chatPromptDto.prompt }]
+    };
+
+    this.geminiService.saveMessage( chatPromptDto.chatId, userMessage );
+    this.geminiService.saveMessage( chatPromptDto.chatId, geminiMessages );
+  };
 }
