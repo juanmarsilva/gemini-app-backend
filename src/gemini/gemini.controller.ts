@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 import { Response } from 'express';
@@ -27,6 +27,14 @@ export class GeminiController {
     res.end();
 
     return resultText;
+  };
+
+  @Get('chat-history/:chatId')
+  getChatHistory( @Param('chatId') chatId: string ) {
+    return this.geminiService.getChatHistory(chatId).map( message => ({
+      role: message.role,
+      parts: message.parts?.map( part => part.text ).join('')
+    }));
   };
 
   @Post('basic-prompt')
