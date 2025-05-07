@@ -7,6 +7,7 @@ import { GeminiService } from './gemini.service';
 import { BasicPromptDto } from './dtos/basic-prompt.dto';
 import { ChatPromptDto } from './dtos/chat-prompt.dto';
 import { GenerateContentResponse } from '@google/genai';
+import { GenerateImageDto } from './dtos/generate-image.dto';
 
 @Controller('gemini')
 export class GeminiController {
@@ -31,7 +32,7 @@ export class GeminiController {
 
   @Get('chat-history/:chatId')
   getChatHistory( @Param('chatId') chatId: string ) {
-    return this.geminiService.getChatHistory(chatId).map( message => ({
+    return this.geminiService.getChatHistory(chatId).map(message => ({
       role: message.role,
       parts: message.parts?.map( part => part.text ).join('')
     }));
@@ -82,4 +83,14 @@ export class GeminiController {
     this.geminiService.saveMessage( chatPromptDto.chatId, userMessage );
     this.geminiService.saveMessage( chatPromptDto.chatId, geminiMessages );
   };
+
+  @Post('generate-image')
+  @UseInterceptors(FilesInterceptor('files'))
+  async generateImage(
+    @Body() generateImageDto: GenerateImageDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    generateImageDto.files = files ?? [];
+    return await this.geminiService.generateImage( generateImageDto ); 
+  }
 }
