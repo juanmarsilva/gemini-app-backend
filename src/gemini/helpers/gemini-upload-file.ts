@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import sharp from 'sharp';
 
 const fileMimeTypesByExtension = {
   jpg: 'image/jpg',
@@ -15,7 +16,41 @@ const fileMimeTypesByExtension = {
   pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 };
 
+interface UploadFileOptions {
+  transformToPNG?: boolean;
+}
+
 export const geminiUploadFiles = async (
+  ai: GoogleGenAI,
+  files: Express.Multer.File[],
+  options: UploadFileOptions = {},
+) => {
+  const { transformToPNG } = options;
+
+  return transformToPNG 
+    ? await transformToPngAndUploadFiles( ai, files )
+    : await uploadFiles( ai, files );
+};
+
+const transformToPngAndUploadFiles = async (
+  ai: GoogleGenAI,
+  files: Express.Multer.File[],
+) => {
+  const pngUploadedFiles = await Promise.all(
+    files.map(async ( file ) => {
+
+      const buffer = await sharp( file.buffer ).png().toBuffer();
+
+      return ai.files.upload({
+        file: new Blob([ buffer ], { type: 'image/png' })
+      });
+    })
+  );
+
+  return pngUploadedFiles;
+};
+
+const uploadFiles = async (
   ai: GoogleGenAI,
   files: Express.Multer.File[],
 ) => {
