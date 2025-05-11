@@ -44,6 +44,6 @@ export class GeminiService {
     };
 
     generateImage( generateImageDto: GenerateImageDto ) {
-        return generateImageUseCase(this.ai,  generateImageDto );
+        return generateImageUseCase(this.ai,  generateImageDto);
     };
 }
