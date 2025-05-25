@@ -8,6 +8,7 @@ import { BasicPromptDto } from './dtos/basic-prompt.dto';
 import { ChatPromptDto } from './dtos/chat-prompt.dto';
 import { GenerateContentResponse } from '@google/genai';
 import { GenerateImageDto } from './dtos/generate-image.dto';
+import { PokemonHelperDto } from './dtos/pokemon-helper.dto';
 
 @Controller('gemini')
 export class GeminiController {
@@ -93,4 +94,11 @@ export class GeminiController {
     generateImageDto.files = files ?? [];
     return await this.geminiService.generateImage( generateImageDto ); 
   }
+
+  @Post('pokemon-helper')
+  getPokemonHelper( @Body() pokemonHelperDto: PokemonHelperDto ) {
+    return this.geminiService.getPokemonHelper( pokemonHelperDto );
+  }
+
+
 }

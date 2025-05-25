@@ -9,11 +9,12 @@ import { ChatPromptDto } from './dtos/chat-prompt.dto';
 import { chatPromptStreamUseCase } from './use-cases/chat-prompt-stream.use-case';
 import { GenerateImageDto } from './dtos/generate-image.dto';
 import { generateImageUseCase } from './use-cases/generate-image.use-case';
+import { PokemonHelperDto } from './dtos/pokemon-helper.dto';
+import { getPokemonHelperUseCase } from './use-cases/get-pokemon-helper.use-case';
 
 
 @Injectable()
 export class GeminiService {
-    
     private ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     private chatHistory = new Map<string, Array<Content>>();
@@ -45,5 +46,9 @@ export class GeminiService {
 
     generateImage( generateImageDto: GenerateImageDto ) {
         return generateImageUseCase(this.ai,  generateImageDto);
+    };
+
+    getPokemonHelper( pokemonHelperDto: PokemonHelperDto ) {
+        return getPokemonHelperUseCase( this.ai, pokemonHelperDto );
     };
 }
