@@ -3,9 +3,9 @@ import { GoogleGenAI } from "@google/genai";
 import { TriviaQuestionDto } from "../dtos/trivia-question.dto";
 
 export interface TriviaQuestionResponse {
-    question:   string;
-    answers:    Array<string>;
-    correcta:   number;
+    question:        string;
+    answers:         Array<string>;
+    correctAnswer:   number;
 };
 
 export const getTriviaQuestionUseCase = async ( ai: GoogleGenAI, triviaQuestionDto: TriviaQuestionDto ) => {
@@ -28,7 +28,7 @@ export const getTriviaQuestionUseCase = async ( ai: GoogleGenAI, triviaQuestionD
                             "answer 3",
                             "answer 4",
                         ],
-                        correcta: indice del arreglo
+                        correctAnswer: indice del arreglo
                     }
                 Sólo retorna el objeto JSON, no des explicaciones ni nada más.
             `,
